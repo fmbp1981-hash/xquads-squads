@@ -86,6 +86,22 @@ workflow:
           reason: "CTA irresistível com baixa fricção"
           deliverable: "2 versões (suave + forte) com razão para agir agora"
 
+    phase_3_5_image_generation:
+      name: "Estratégia de Geração de Imagens"
+      agent: image-gen-strategist
+      duration: "3 min"
+      decision_logic: |
+        Analisa cada slide e decide:
+        - IMAGEM ESSENCIAL / RECOMENDADA / SEM IMAGEM / BACKGROUND TEXTURA
+        Gera prompts otimizados para cada slide que precisa de imagem
+      outputs:
+        - auditoria de slides (quais precisam de imagem)
+        - plano de consistência visual (estilo master, paleta)
+        - prompts completos para NanoBanana (Gemini 2.5 Flash)
+        - prompts completos para DALL-E 3
+        - prompts para Midjourney v6
+        - instruções de overlay/tratamento por slide
+
     phase_4_visual_direction:
       name: "Direção Visual"
       agents:
@@ -101,14 +117,34 @@ workflow:
         - formato (1080x1350 ou 1080x1080)
 
     phase_5_consolidated_delivery:
-      name: "Documento de Produção Final"
+      name: "Documento de Produção Consolidado"
       format: |
-        Entrega um documento formatado com:
+        Entrega documento formatado com:
         - Copy completo de cada slide
-        - Brief visual de cada slide
-        - Paleta + tipografia
-        - Ferramentas sugeridas (Canva / Figma / Adobe Express)
-        Pronto para passar a um designer ou produzir diretamente.
+        - Brief visual + imagem necessária por slide
+        - Paleta + tipografia (hex + nome de fontes)
+        Pronto para Fase 6 (produção Figma)
+
+    phase_6_figma_production:
+      name: "Produção no Figma"
+      agent: figma-carousel-producer
+      duration: "5 min"
+      modes:
+        with_credentials: |
+          Se FIGMA_ACCESS_TOKEN + FIGMA_FILE_KEY estão configurados:
+          → Cria todos os frames via Figma REST API
+          → Aplica copy, cores, tipografia, placeholders de imagem
+          → Retorna link do arquivo Figma + links de exportação PNG
+        without_credentials: |
+          Se credenciais não configuradas:
+          → Entrega Figma Handoff Document completo
+          → Inclui instruções de configuração do MCP Figma
+          → Specs prontas para montagem manual no Figma/Canva
+      final_output:
+        - Link do arquivo Figma (ou Handoff Document)
+        - Checklist de aprovação (copy, imagens, visual, CTA)
+        - Instruções de exportação PNG 2x para Instagram
+        - Ordem de upload dos slides
 
 routing_rules:
   - Se o usuário fornecer o tema: execute TODAS as 5 fases automaticamente
@@ -133,8 +169,12 @@ greeting: |
   1️⃣ Estratégia → @hormozi-content
   2️⃣ Consciência + Estrutura → @eugene-schwartz + @blake-snyder
   3️⃣ Copy por slide → @gary-halbert / @david-ogilvy / @dan-kennedy / @hormozi-closer
+  3.5️⃣ Imagens → @image-gen-strategist (NanoBanana / DALL-E 3 / Midjourney)
   4️⃣ Direção Visual → @design-chief + @ux-designer
-  5️⃣ Documento final de produção
+  5️⃣ Documento de produção consolidado
+  6️⃣ Produção Figma → @figma-carousel-producer (frames prontos para exportar)
+
+  > **Resultado final:** arquivo Figma com slides prontos para você aprovar e exportar para o Instagram.
 
   **Qual é o tema?**
 ```
@@ -170,14 +210,39 @@ TEMA
                    │
                    ▼
 ┌─────────────────────────────────────────────┐
+│  FASE 3.5: @image-gen-strategist            │
+│  Quais slides precisam de imagem?           │
+│  Prompts: NanoBanana / DALL-E 3 /           │
+│           Midjourney / Flux                 │
+└──────────────────┬──────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────┐
 │  FASE 4: @design-chief + @ux-designer       │
 │  Paleta + Tipografia + Brief visual         │
 └──────────────────┬──────────────────────────┘
                    │
                    ▼
 ┌─────────────────────────────────────────────┐
-│  FASE 5: DOCUMENTO FINAL DE PRODUÇÃO        │
-│  Copy + Visual + Specs → Pronto para        │
-│  Canva / Figma / Designer                  │
-└─────────────────────────────────────────────┘
+│  FASE 5: DOCUMENTO CONSOLIDADO              │
+│  Copy + Visual + Specs + Image Prompts      │
+└──────────────────┬──────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────┐
+│  FASE 6: @figma-carousel-producer           │
+│  ┌──────────────────────────────────────┐   │
+│  │ COM credenciais Figma:               │   │
+│  │   → Cria frames via Figma API        │   │
+│  │   → Link do arquivo para aprovação   │   │
+│  │   → Exporta PNG prontos para postar  │   │
+│  │                                      │   │
+│  │ SEM credenciais:                     │   │
+│  │   → Figma Handoff Document completo  │   │
+│  │   → Specs para Canva/Figma manual    │   │
+│  └──────────────────────────────────────┘   │
+└──────────────────┬──────────────────────────┘
+                   │
+                   ▼
+         ✅ APROVAÇÃO + POST INSTAGRAM
 ```

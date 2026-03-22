@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-mcp-server"],
+      "env": {
+        "FIGMA_ACCESS_TOKEN": "${FIGMA_ACCESS_TOKEN}"
+      }
+    }
+  },
+  "notes": {
+    "figma_setup": [
+      "1. Crie seu token pessoal: Figma → Settings → Account → Personal access tokens",
+      "2. Crie um arquivo Figma em branco chamado 'Carrosséis Instagram'",
+      "3. Copie o FILE_KEY da URL: figma.com/design/[FILE_KEY]/...",
+      "4. Adicione ao .env na raiz do projeto:",
+      "   FIGMA_ACCESS_TOKEN=seu_token_aqui",
+      "   FIGMA_FILE_KEY=id_do_arquivo_figma",
+      "5. Execute: claude (o MCP será carregado automaticamente)"
+    ],
+    "image_generation": {
+      "nanobanana": "https://nanobananas.ai — Baseado em Gemini 2.5 Flash. Gratuito com limites.",
+      "dalle3": "Disponível via ChatGPT Plus ou OpenAI API (gpt-4o com image gen)",
+      "midjourney": "Discord: discord.gg/midjourney",
+      "flux": "Replicate API: replicate.com/black-forest-labs/flux-1.1-pro"
+    }
+  }
+}

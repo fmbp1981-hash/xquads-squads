@@ -119,7 +119,7 @@ domain_orchestrators:
     agent_id: "@instagram-carousel-chief"
     focus: "Complete Instagram carousel production: strategy → copy → visual direction"
     slash_command: "/carrossel-instagram [tema]"
-    specialists_coordinated: ["hormozi-content", "eugene-schwartz", "blake-snyder", "gary-halbert", "david-ogilvy", "dan-kennedy", "gary-bencivenga", "hormozi-closer", "design-chief", "ux-designer"]
+    specialists_coordinated: ["hormozi-content", "eugene-schwartz", "blake-snyder", "gary-halbert", "david-ogilvy", "dan-kennedy", "gary-bencivenga", "hormozi-closer", "image-gen-strategist", "visual-generator", "design-chief", "ux-designer", "figma-carousel-producer"]
     trigger_keywords: ["carrossel", "carousel", "instagram", "slides instagram", "crie um carrossel", "fazer carrossel"]
     priority: "ROUTE IMMEDIATELY — skip squad chiefs, go directly to @instagram-carousel-chief"
 
