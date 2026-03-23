@@ -5,10 +5,11 @@
 ## Quick Start
 
 ```
-@cyber-chief         # Activate the orchestrator
-*diagnose            # Triage your security challenge
-*pentest-engagement  # Run a penetration test
-*incident-response   # Handle a security incident
+@cyber-chief              # Activate the orchestrator
+*diagnose                 # Triage your security challenge
+*pentest-engagement       # Run a penetration test
+*incident-response        # Handle a security incident
+*audit-supply-chain       # Audit a repo before installation (Phase 0)
 ```
 
 ## Agents (15)
@@ -31,7 +32,7 @@
 
 ## Components
 
-- **15 agents**, **9 tasks**, **2 workflows**, **1 checklist**
+- **15 agents**, **10 tasks**, **2 workflows**, **1 checklist**
 
 ## Requirements
 
