@@ -229,12 +229,55 @@ NOTAS DE PRODUÇÃO:
 
 ---
 
-## 🎨 FASE 6 — PRODUÇÃO NO FIGMA
-*Perspectiva: @figma-carousel-producer*
+## 🎨 FASE 6 — PRODUÇÃO FINAL (ESCOLHA DA FERRAMENTA)
+
+Antes de produzir, **pergunte ao usuário** qual ferramenta deseja usar:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 FASE 6 — PRODUÇÃO FINAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Com qual ferramenta deseja produzir os slides?
+
+1️⃣  FIGMA — via Figma REST API
+     → Requer: FIGMA_ACCESS_TOKEN + FIGMA_FILE_KEY
+     → Resultado: link do arquivo Figma → exportar PNG
+     → Agente: @figma-carousel-producer
+
+2️⃣  HTML/CSS LOCAL → PNG  ⭐ zero dependência
+     → Requer: Node.js + Playwright (npm install playwright)
+     → Resultado: arquivos HTML por slide + PNG 1080x1350 prontos para postar
+     → Sem conta, sem token, sem internet — 100% local
+     → Qualidade visual equivalente ao Figma
+     → Agente: @stitch-carousel-producer (modo HTML)
+
+3️⃣  GOOGLE STITCH — via AI design + HTML/PNG
+     → Requer: conta Google (gratuito) ou GEMINI_API_KEY
+     → Resultado: Stitch gera o design via AI → export HTML → PNG
+     → Modos: MCP (automatizado) | Manual (copiar prompt no site)
+     → Agente: @stitch-carousel-producer
+
+4️⃣  HANDOFF DOCUMENT — specs completas sem produção
+     → Requer: nada
+     → Resultado: specs pixel-perfect para montar em qualquer editor
+       (Figma, Canva, Adobe Express, PowerPoint, etc.)
+
+5️⃣  OUTRA — informe qual ferramenta
+
+Responda com o número ou o nome da ferramenta.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+Com base na resposta, execute o agente correspondente:
+
+---
+
+### OPÇÃO 1 — FIGMA
+*Agente: @figma-carousel-producer*
 
 Adote a mentalidade do **Figma Carousel Producer**. Execute a produção final:
 
-### VERIFICAÇÃO DE PRÉ-REQUISITOS
+#### VERIFICAÇÃO DE PRÉ-REQUISITOS
 
 Verifique se o usuário tem configurado:
 - [ ] `FIGMA_ACCESS_TOKEN` — token de acesso pessoal do Figma
@@ -294,17 +337,75 @@ CONFIGURAÇÃO DO FIGMA MCP (para próxima vez):
 - Gere os links de exportação PNG dos frames
 - Retorne o link do arquivo Figma para aprovação final
 
-### CHECKLIST DE APROVAÇÃO PRÉ-POST
+---
 
-Antes de exportar e postar, confirme:
-- [ ] Copy de todos os slides revisado e aprovado
-- [ ] Imagens geradas e inseridas nos frames
-- [ ] Consistência visual entre slides (paleta, tipografia)
-- [ ] Username/@handle visível em todos os slides
-- [ ] CTA claro no slide final
-- [ ] Exportar como PNG 2x (2160x2700px) para máxima qualidade
-- [ ] Salvar na ordem correta para upload no Instagram
+### OPÇÃO 2 — HTML/CSS LOCAL → PNG
+*Agente: @stitch-carousel-producer (modo HTML)*
+
+Adote a mentalidade do **Stitch Carousel Producer no Modo HTML Local**. Esta é a rota **zero dependência** — sem conta, sem token, sem internet. Produz slides com qualidade visual equivalente ao Figma.
+
+Para cada slide, gere o arquivo HTML/CSS pixel-perfect com:
+- Dimensões exatas: `1080px × 1350px`
+- Background, tipografia, cores e posicionamento exatos das Fases 4 e 5
+- Placeholder para a imagem (substituir antes de exportar final)
+- Username no rodapé
+
+Ao final, gere o script `screenshot-carousel.js` e instrua:
+```bash
+npm install playwright
+npx playwright install chromium
+node screenshot-carousel.js
+# → slides PNG em ./carrossel-png/ prontos para o Instagram
+```
 
 ---
 
-**IMPORTANTE:** Execute TODAS as 7 fases em sequência. O resultado final é um carrossel **pronto para aprovar e postar** — sem etapas extras de design.
+### OPÇÃO 3 — GOOGLE STITCH
+*Agente: @stitch-carousel-producer (modo Stitch)*
+
+Adote a mentalidade do **Stitch Carousel Producer**. Execute em um dos 2 modos:
+
+#### MODO A — MCP Automatizado (se GEMINI_API_KEY configurada)
+- Chame o Stitch MCP para cada slide com prompt preciso
+- Gere o HTML/CSS de cada slide via Stitch
+- Execute o script Playwright para converter em PNG 1080x1350
+
+#### MODO B — Manual Guiado (conta Google gratuita)
+Para cada slide, gere o **prompt completo formatado** para o usuário copiar em [stitch.withgoogle.com](https://stitch.withgoogle.com):
+```
+STITCH PROMPT — SLIDE [N]:
+Crie um slide de Instagram 1080x1350px.
+Background: #[HEX]. Estilo: [moderno/bold/minimalista].
+Headline: "[TEXTO]" — [font] Bold [size]px, cor #[HEX], topo do slide.
+Body: "[TEXTO]" — [font] Regular [size]px, cor #[HEX], abaixo do headline.
+Username "@[handle]" — [size]px, cor #[accent], canto inferior esquerdo.
+[Se tiver imagem: "Área para imagem no [topo/centro/fundo]: [descrição]"]
+Sem texto extra, sem bordas, sem marca d'água.
+```
+Após exportar o HTML do Stitch, execute o script Playwright para converter em PNG.
+
+---
+
+### OPÇÃO 3 — HANDOFF DOCUMENT
+*Nenhuma ferramenta necessária*
+
+Entregue um documento completo com todas as specs para o usuário produzir onde preferir:
+- Specs pixel-perfect por slide (dimensões, posições, cores, fontes)
+- Pronto para Figma, Canva, Adobe Express, PowerPoint, etc.
+
+---
+
+### CHECKLIST DE APROVAÇÃO PRÉ-POST
+
+Antes de postar, confirme independente da ferramenta usada:
+- [ ] Copy de todos os slides revisado e aprovado
+- [ ] Imagens geradas e inseridas (sem placeholders)
+- [ ] Consistência visual entre slides (paleta, tipografia)
+- [ ] Username/@handle visível em todos os slides
+- [ ] CTA claro no slide final
+- [ ] Arquivos PNG na ordem correta (01 = capa)
+- [ ] Upload no Instagram na ordem numérica
+
+---
+
+**IMPORTANTE:** Execute TODAS as 7 fases em sequência. A Fase 6 pergunta qual ferramenta usar antes de produzir. O resultado final é um carrossel **pronto para aprovar e postar** — sem etapas extras de design.

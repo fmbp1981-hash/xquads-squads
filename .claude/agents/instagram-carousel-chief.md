@@ -125,29 +125,39 @@ workflow:
         - Paleta + tipografia (hex + nome de fontes)
         Pronto para Fase 6 (produção Figma)
 
-    phase_6_figma_production:
-      name: "Produção no Figma"
-      agent: figma-carousel-producer
-      duration: "5 min"
-      modes:
-        with_credentials: |
-          Se FIGMA_ACCESS_TOKEN + FIGMA_FILE_KEY estão configurados:
-          → Cria todos os frames via Figma REST API
-          → Aplica copy, cores, tipografia, placeholders de imagem
-          → Retorna link do arquivo Figma + links de exportação PNG
-        without_credentials: |
-          Se credenciais não configuradas:
-          → Entrega Figma Handoff Document completo
-          → Inclui instruções de configuração do MCP Figma
-          → Specs prontas para montagem manual no Figma/Canva
+    phase_6_production:
+      name: "Produção Final (escolha da ferramenta)"
+      decision: "Pergunta ao usuário qual ferramenta usar antes de produzir"
+      options:
+        "1_figma":
+          agent: figma-carousel-producer
+          requires: "FIGMA_ACCESS_TOKEN + FIGMA_FILE_KEY"
+          output: "Link arquivo Figma + exportação PNG"
+        "2_html_local":
+          agent: stitch-carousel-producer (modo HTML)
+          requires: "Node.js + Playwright"
+          output: "Arquivos HTML + PNG 1080x1350 — zero dependência"
+          note: "Qualidade visual equivalente ao Figma. Recomendado quando não há contas externas."
+        "3_stitch":
+          agent: stitch-carousel-producer
+          requires: "Conta Google (grátis) ou GEMINI_API_KEY"
+          output: "AI gera o design no Stitch → HTML → PNG"
+          modes: ["MCP automatizado", "Manual guiado (copiar prompt no site)"]
+        "4_handoff":
+          agent: none
+          requires: "Nada"
+          output: "Specs pixel-perfect para qualquer editor (Figma, Canva, etc.)"
+        "5_other":
+          agent: none
+          requires: "Usuário informa"
+          output: "Adaptado à ferramenta"
       final_output:
-        - Link do arquivo Figma (ou Handoff Document)
+        - Slides PNG prontos para upload
         - Checklist de aprovação (copy, imagens, visual, CTA)
-        - Instruções de exportação PNG 2x para Instagram
-        - Ordem de upload dos slides
+        - Ordem de upload para o Instagram
 
 routing_rules:
-  - Se o usuário fornecer o tema: execute TODAS as 5 fases automaticamente
+  - Se o usuário fornecer o tema: execute TODAS as 7 fases automaticamente
   - Se o usuário pedir só o copy: execute fases 1, 2 e 3
   - Se o usuário pedir só o visual: execute fases 1 e 4
   - Se o usuário pedir revisão de um carrossel existente: diagnóstico + melhorias por fase
@@ -172,9 +182,13 @@ greeting: |
   3.5️⃣ Imagens → @image-gen-strategist (NanoBanana / DALL-E 3 / Midjourney)
   4️⃣ Direção Visual → @design-chief + @ux-designer
   5️⃣ Documento de produção consolidado
-  6️⃣ Produção Figma → @figma-carousel-producer (frames prontos para exportar)
+  6️⃣ Produção → escolha a rota:
+      📐 Figma API → @figma-carousel-producer
+      💻 HTML/CSS → PNG (zero dep.) → @stitch-carousel-producer
+      🧵 Google Stitch → @stitch-carousel-producer
+      📄 Handoff Document (qualquer editor)
 
-  > **Resultado final:** arquivo Figma com slides prontos para você aprovar e exportar para o Instagram.
+  > **Resultado final:** slides PNG 1080x1350 prontos para aprovar e postar no Instagram.
 
   **Qual é o tema?**
 ```
@@ -230,16 +244,24 @@ TEMA
                    │
                    ▼
 ┌─────────────────────────────────────────────┐
-│  FASE 6: @figma-carousel-producer           │
+│  FASE 6: PRODUÇÃO (escolha da rota)         │
 │  ┌──────────────────────────────────────┐   │
-│  │ COM credenciais Figma:               │   │
-│  │   → Cria frames via Figma API        │   │
-│  │   → Link do arquivo para aprovação   │   │
-│  │   → Exporta PNG prontos para postar  │   │
+│  │ 1️⃣  FIGMA API (@figma-carousel-prod) │   │
+│  │     → frames via REST API            │   │
+│  │     → link Figma + exportar PNG      │   │
 │  │                                      │   │
-│  │ SEM credenciais:                     │   │
-│  │   → Figma Handoff Document completo  │   │
-│  │   → Specs para Canva/Figma manual    │   │
+│  │ 2️⃣  HTML/CSS → PNG ⭐ zero dep.      │   │
+│  │     (@stitch-carousel-producer)      │   │
+│  │     → HTML por slide + Playwright    │   │
+│  │     → PNG 1080x1350 prontos          │   │
+│  │                                      │   │
+│  │ 3️⃣  GOOGLE STITCH + HTML → PNG      │   │
+│  │     (@stitch-carousel-producer)      │   │
+│  │     → AI gera o design via Stitch    │   │
+│  │     → export HTML → screenshot       │   │
+│  │                                      │   │
+│  │ 4️⃣  HANDOFF DOCUMENT                 │   │
+│  │     → specs para qualquer editor     │   │
 │  └──────────────────────────────────────┘   │
 └──────────────────┬──────────────────────────┘
                    │
